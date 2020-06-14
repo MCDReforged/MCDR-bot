@@ -14,7 +14,7 @@ HELP_MESSAGE = '''
 §7!!bot tp §b<name>§r：让名称为§b<name>§r的bot传送到你的位置
 §7!!bot clean§r：使所有bot离开游戏
 '''.strip()
-GAMEMODE = 'survival'
+GAMEMODE = 'creative'
 
 bot_list = []
 
@@ -67,7 +67,10 @@ def on_info(server, info):
 					else:
 						add_bot(bot_name)
 				elif args[1] == 'stop' and len(args) == 3:
-					remove_bot(args[2])
+					if args[2] in bot_list:
+						remove_bot(args[2])
+					else:
+						reply(server, info, '机器人未存在')
 				elif args[1] == 'tp' and len(args) == 3 and info.is_player:
 					bot_name = args[2]
 					if get_bot(bot_name):
