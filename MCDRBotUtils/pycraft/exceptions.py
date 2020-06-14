@@ -50,27 +50,27 @@ class YggdrasilError(Exception):
 
 
 class ConnectionFailure(Exception):
-    """Raised by 'pycraft.networking.Connection' when a connection attempt
+    """Raised by 'minecraft.networking.Connection' when a connection attempt
        fails.
     """
 
 
 class VersionMismatch(ConnectionFailure):
-    """Raised by 'pycraft.networking.Connection' when connection is not
+    """Raised by 'minecraft.networking.Connection' when connection is not
        possible due to a difference between the server's and client's
        supported protocol versions.
     """
 
 
 class LoginDisconnect(ConnectionFailure):
-    """Raised by 'pycraft.networking.Connection' when a connection attempt
+    """Raised by 'minecraft.networking.Connection' when a connection attempt
        is terminated by the server sending a Disconnect packet, during login,
        with an unknown message format.
     """
 
 
 class InvalidState(ConnectionFailure):
-    """Raised by 'pycraft.networking.Connection' when a connection attempt
+    """Raised by 'minecraft.networking.Connection' when a connection attempt
        fails due to to the internal state of the Connection being unsuitable,
        for example if there is an existing ongoing connection.
     """

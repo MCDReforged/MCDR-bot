@@ -102,7 +102,7 @@ class AuthenticationToken(object):
             Otherwise it will raise an exception.
 
         Raises:
-            pycraft.exceptions.YggdrasilError
+            minecraft.exceptions.YggdrasilError
         """
         payload = {
             "agent": {
@@ -144,7 +144,7 @@ class AuthenticationToken(object):
             Otherwise it raises an exception.
 
         Raises:
-            pycraft.exceptions.YggdrasilError
+            minecraft.exceptions.YggdrasilError
             ValueError - if `AuthenticationToken.access_token` or
                 `AuthenticationToken.client_token` isn't set.
         """
@@ -180,7 +180,7 @@ class AuthenticationToken(object):
             Otherwise it will raise an exception.
 
         Raises:
-            pycraft.exceptions.YggdrasilError
+            minecraft.exceptions.YggdrasilError
             ValueError - if `AuthenticationToken.access_token` is not set.
         """
         if self.access_token is None:
@@ -209,7 +209,7 @@ class AuthenticationToken(object):
             Otherwise it will raise an exception.
 
         Raises:
-            pycraft.exceptions.YggdrasilError
+            minecraft.exceptions.YggdrasilError
         """
         res = _make_request(AUTH_SERVER, "signout",
                             {"username": username, "password": password})
@@ -226,7 +226,7 @@ class AuthenticationToken(object):
             ``True`` if tokens were successfully invalidated.
 
         Raises:
-            :class:`pycraft.exceptions.YggdrasilError`
+            :class:`minecraft.exceptions.YggdrasilError`
         """
         res = _make_request(AUTH_SERVER, "invalidate",
                             {"accessToken": self.access_token,
@@ -248,7 +248,7 @@ class AuthenticationToken(object):
             ``True`` if no errors occured
 
         Raises:
-            :class:`pycraft.exceptions.YggdrasilError`
+            :class:`minecraft.exceptions.YggdrasilError`
 
         """
         if not self.authenticated:

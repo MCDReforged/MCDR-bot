@@ -1,5 +1,3 @@
-import copy
-
 from .packet_buffer import PacketBuffer
 from zlib import compress
 from ..types import (
@@ -11,7 +9,6 @@ class Packet(object):
     packet_name = "base"
     id = None
     definition = None
-    data = None  # PCRC
 
     # To define the packet ID, either:
     #  1. Define the attribute `id', of type int, in a subclass; or
@@ -99,7 +96,6 @@ class Packet(object):
         VarInt.send(self.id, packet_buffer)
         # write every individual field
         self.write_fields(packet_buffer)
-        self.data = copy.deepcopy(packet_buffer.bytes.getvalue())
         self._write_buffer(socket, packet_buffer, compression_threshold)
 
     def write_fields(self, packet_buffer):
@@ -114,6 +110,8 @@ class Packet(object):
         str = type(self).__name__
         if self.id is not None:
             str = '0x%02X %s' % (self.id, str)
+        elif hasattr(self, "packet_id"):
+            str = 'pkt: 0x%02X %s' % (self.packet_id, str)
         fields = self.fields
         if fields is not None:
             inner_str = ', '.join('%s=%s' % (a, self.field_string(a))
@@ -144,7 +142,7 @@ class Packet(object):
 
     @classmethod
     def field_enum(cls, field, context=None):
-        """ The subclass of 'pycraft.networking.types.Enum' associated with
+        """ The subclass of 'minecraft.networking.types.Enum' associated with
             this field, or None if there is no such class.
         """
         enum_name = ''.join(s.capitalize() for s in field.split('_'))

@@ -5,7 +5,7 @@ both Python2 and Python3 while using the same codebase.
 
 # Raw input -> input shenangians
 # example
-# > from pycraft.compat import input
+# > from minecraft.compat import input
 # > input("asd")
 
 # Hi, I'm pylint, and sometimes I act silly, at which point my programmer

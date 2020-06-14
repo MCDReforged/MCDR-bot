@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-import copy
-import traceback
 from collections import deque
 from threading import RLock
 import zlib
@@ -61,7 +59,7 @@ class Connection(object):
         initial_version=None,
         allowed_versions=None,
         handle_exception=None,
-        handle_exit=None
+        handle_exit=None,
     ):
         """Sets up an instance of this object to be able to connect to a
         minecraft server.
@@ -71,7 +69,7 @@ class Connection(object):
 
         :param address: address of the server to connect to
         :param port(int): port of the server to connect to
-        :param auth_token: :class:`pycraft.authentication.AuthenticationToken`
+        :param auth_token: :class:`minecraft.authentication.AuthenticationToken`
                            object. If None, no authentication is attempted and
                            the server is assumed to be running in offline mode.
         :param username: Username string; only applicable in offline mode.
@@ -117,7 +115,6 @@ class Connection(object):
         self.outgoing_packet_listeners = []
         self.early_outgoing_packet_listeners = []
         self._exception_handlers = []
-        self.running_networking_thread = 0
 
         def proto_version(version):
             if isinstance(version, str):
@@ -220,7 +217,7 @@ class Connection(object):
         Registers a listener method which will be notified when a packet of
         a selected type is received.
 
-        If :class:`pycraft.networking.connection.IgnorePacket` is raised from
+        If :class:`minecraft.networking.connection.IgnorePacket` is raised from
         within this method, no subsequent handlers will be called. If
         'early=True', this has the additional effect of preventing the default
         in-built action; this could break the internal state of the
@@ -389,9 +386,6 @@ class Connection(object):
                 self.reactor = PlayingStatusReactor(self)
             self._start_network_thread()
 
-    def check_connection(self):
-        return self._check_connection()
-
     def _check_connection(self):
         if self.networking_thread is not None and \
            not self.networking_thread.interrupt or \
@@ -497,11 +491,7 @@ class Connection(object):
 
         # If allowed by the final exception handler, re-raise the exception.
         if self.handle_exception is None and not caught:
-            # dont spam on disconnected
-            if not self.connected and type(exc) in [BrokenPipeError, EOFError]:
-                pass
-            else:
-               raise_(*exc_info)
+            raise_(*exc_info)
 
     def _version_mismatch(self, server_protocol=None, server_version=None):
         if server_protocol is None:
@@ -516,7 +506,10 @@ class Connection(object):
         ss = 'supported, but not allowed for this connection' \
              if server_protocol in SUPPORTED_PROTOCOL_VERSIONS \
              else 'not supported'
-        raise VersionMismatch("Server's %s is %s." % (vs, ss))
+        err = VersionMismatch("Server's %s is %s." % (vs, ss))
+        err.server_protocol = server_protocol
+        err.server_version = server_version
+        raise err
 
     def _handle_exit(self):
         if not self.connected and self.handle_exit is not None:
@@ -540,10 +533,10 @@ class NetworkingThread(threading.Thread):
         self.connection = connection
         self.name = "Networking Thread"
         self.daemon = True
+
         self.previous_thread = previous
 
     def run(self):
-        self.connection.running_networking_thread += 1
         try:
             if self.previous_thread is not None:
                 if self.previous_thread.is_alive():
@@ -559,7 +552,6 @@ class NetworkingThread(threading.Thread):
         finally:
             with self.connection._write_lock:
                 self.connection.networking_thread = None
-            self.connection.running_networking_thread -= 1
 
     def _run(self):
         while not self.interrupt:
@@ -583,8 +575,8 @@ class NetworkingThread(threading.Thread):
                 else:
                     read_timeout = 0.05
 
-            # Read and react to as many as 500 packets.
-            while num_packets < 500 and not self.interrupt:
+            # Read and react to as many as 50 packets.
+            while num_packets < 50 and not self.interrupt:
                 packet = self.connection.reactor.read_packet(
                     self.connection.file_object, timeout=read_timeout)
                 if not packet:
@@ -648,8 +640,6 @@ class PacketReactor(object):
                     packet_data.send(decompressed_packet)
                     packet_data.reset_cursor()
 
-            packet_raw = copy.deepcopy(packet_data.bytes.getvalue())
-
             packet_id = VarInt.read(packet_data)
 
             # If we know the structure of the packet, attempt to parse it
@@ -658,10 +648,9 @@ class PacketReactor(object):
                 packet = self.clientbound_packets[packet_id]()
                 packet.context = self.connection.context
                 packet.read(packet_data)
+                return packet
             else:
-                packet = packets.Packet(context=self.connection.context)
-            packet.data = packet_raw
-            return packet
+                return packets.Packet(context=self.connection.context, packet_id=packet_id)
         else:
             return None
 
@@ -762,16 +751,15 @@ class PlayingReactor(PacketReactor):
                 teleport_confirm = serverbound.play.TeleportConfirmPacket()
                 teleport_confirm.teleport_id = packet.teleport_id
                 self.connection.write_packet(teleport_confirm)
-            # PCRC remove else
-            position_response = serverbound.play.PositionAndLookPacket()
-            position_response.x = packet.x
-            position_response.feet_y = packet.y
-            position_response.z = packet.z
-            position_response.yaw = packet.yaw
-            position_response.pitch = packet.pitch
-            position_response.on_ground = True
-            self.connection.write_packet(position_response)
-
+            else:
+                position_response = serverbound.play.PositionAndLookPacket()
+                position_response.x = packet.x
+                position_response.feet_y = packet.y
+                position_response.z = packet.z
+                position_response.yaw = packet.yaw
+                position_response.pitch = packet.pitch
+                position_response.on_ground = True
+                self.connection.write_packet(position_response)
             self.connection.spawned = True
 
         elif packet.packet_name == "disconnect":
