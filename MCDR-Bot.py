@@ -67,10 +67,7 @@ def on_info(server, info):
 					else:
 						add_bot(bot_name)
 				elif args[1] == 'stop' and len(args) == 3:
-					if args[2] in bot_list:
-						remove_bot(args[2])
-					else:
-						reply(server, info, '机器人未存在')
+					remove_bot(args[2])
 				elif args[1] == 'tp' and len(args) == 3 and info.is_player:
 					bot_name = args[2]
 					if get_bot(bot_name):
