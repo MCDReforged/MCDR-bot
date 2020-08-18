@@ -14,7 +14,7 @@ HELP_MESSAGE = '''
 §7!!bot tp §b<name>§r：让名称为§b<name>§r的bot传送到你的位置
 §7!!bot clean§r：使所有bot离开游戏
 '''.strip()
-GAMEMODE = 'creative'
+GAMEMODE = 'survival'
 
 bot_list = []
 
