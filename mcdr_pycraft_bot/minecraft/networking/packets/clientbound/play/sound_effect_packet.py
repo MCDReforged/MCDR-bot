@@ -1,3 +1,4 @@
+from mcdr_pycraft_bot.minecraft import PRE
 from mcdr_pycraft_bot.minecraft.networking.packets import Packet
 from mcdr_pycraft_bot.minecraft.networking.types import (
     VarInt, String, Float, Byte, Type, Integer, Vector, Enum,
@@ -9,7 +10,8 @@ __all__ = 'SoundEffectPacket',
 class SoundEffectPacket(Packet):
     @staticmethod
     def get_id(context):
-        return 0x5C if context.protocol_later_eq(755) else \
+        return 0x5D if context.protocol_later_eq(PRE | 48) else \
+               0x5C if context.protocol_later_eq(755) else \
                0x51 if context.protocol_later_eq(721) else \
                0x52 if context.protocol_later_eq(550) else \
                0x51 if context.protocol_later_eq(471) else \

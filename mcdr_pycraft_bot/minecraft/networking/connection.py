@@ -53,6 +53,13 @@ class ConnectionContext(object):
            later than, or is equal to, 'other_pv', or else False."""
         return utility.protocol_earlier_eq(other_pv, self.protocol_version)
 
+    def protocol_in_range(self, start_pv, end_pv):
+        """Returns True if the protocol version of this context was published
+           later than, or is equal to, 'start_pv' and was published earlier
+           than 'end_pv' (analogously to Python's 'range' function)."""
+        return (utility.protocol_earlier(self.protocol_version, end_pv) and
+                utility.protocol_earlier_eq(start_pv, self.protocol_version))
+
 
 class _ConnectionOptions(object):
     def __init__(self, address=None, port=None, compression_threshold=-1,
@@ -792,17 +799,15 @@ class PlayingReactor(PacketReactor):
                 teleport_confirm = serverbound.play.TeleportConfirmPacket()
                 teleport_confirm.teleport_id = packet.teleport_id
                 self.connection.write_packet(teleport_confirm)
-
-            # #153 fixes
-            position_response = serverbound.play.PositionAndLookPacket()
-            position_response.x = packet.x
-            position_response.feet_y = packet.y
-            position_response.z = packet.z
-            position_response.yaw = packet.yaw
-            position_response.pitch = packet.pitch
-            position_response.on_ground = True
-            self.connection.write_packet(position_response)
-
+            else:
+                position_response = serverbound.play.PositionAndLookPacket()
+                position_response.x = packet.x
+                position_response.feet_y = packet.y
+                position_response.z = packet.z
+                position_response.yaw = packet.yaw
+                position_response.pitch = packet.pitch
+                position_response.on_ground = True
+                self.connection.write_packet(position_response)
             self.connection.spawned = True
 
         elif packet.packet_name == "disconnect":
