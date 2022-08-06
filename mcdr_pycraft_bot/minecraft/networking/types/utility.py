@@ -4,7 +4,7 @@
 from collections import namedtuple
 
 # These aliases are retained for backward compatibility
-from minecraft.utility import (  # noqa: F401
+from mcdr_pycraft_bot.minecraft.utility import (  # noqa: F401
     descriptor, overridable_descriptor, overridable_property, attribute_alias,
     multi_attribute_alias, attribute_transform, class_and_instancemethod,
 )

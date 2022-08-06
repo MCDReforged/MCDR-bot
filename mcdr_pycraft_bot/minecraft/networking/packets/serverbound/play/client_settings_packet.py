@@ -1,11 +1,11 @@
 import operator
 
-from minecraft.networking.packets import Packet
-from minecraft.networking.types import (
+from mcdr_pycraft_bot.minecraft.networking.packets import Packet
+from mcdr_pycraft_bot.minecraft.networking.types import (
     String, Byte, VarInt, Boolean, UnsignedByte, Enum, BitFieldEnum,
     AbsoluteHand
 )
-from minecraft.utility import attribute_transform
+from mcdr_pycraft_bot.minecraft.utility import attribute_transform
 
 
 class ClientSettingsPacket(Packet):

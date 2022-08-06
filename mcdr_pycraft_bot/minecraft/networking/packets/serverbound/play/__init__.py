@@ -1,8 +1,8 @@
-from minecraft.networking.packets import (
+from mcdr_pycraft_bot.minecraft.networking.packets import (
     Packet, AbstractKeepAlivePacket, AbstractPluginMessagePacket
 )
 
-from minecraft.networking.types import (
+from mcdr_pycraft_bot.minecraft.networking.types import (
     Double, Float, Boolean, VarInt, String, Byte, Position, Enum,
     RelativeHand, BlockFace, Vector, Direction, PositionAndLook,
     multi_attribute_alias,

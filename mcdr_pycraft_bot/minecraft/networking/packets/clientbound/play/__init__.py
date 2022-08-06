@@ -1,9 +1,9 @@
-from minecraft import PRE
-from minecraft.networking.packets import (
+from mcdr_pycraft_bot.minecraft import PRE
+from mcdr_pycraft_bot.minecraft.networking.packets import (
     Packet, AbstractKeepAlivePacket, AbstractPluginMessagePacket
 )
 
-from minecraft.networking.types import (
+from mcdr_pycraft_bot.minecraft.networking.types import (
     FixedPoint, Integer, Angle, UnsignedByte, Byte, Boolean, UUID, Short,
     VarInt, Double, Float, String, Enum, Difficulty, Long, Vector, Direction,
     PositionAndLook, multi_attribute_alias, attribute_transform,

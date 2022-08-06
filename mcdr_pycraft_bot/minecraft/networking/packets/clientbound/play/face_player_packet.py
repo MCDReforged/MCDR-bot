@@ -1,8 +1,8 @@
-from minecraft.networking.types import (
+from mcdr_pycraft_bot.minecraft.networking.types import (
     VarInt, Double, Boolean, OriginPoint, Vector, multi_attribute_alias
 )
 
-from minecraft.networking.packets import Packet
+from mcdr_pycraft_bot.minecraft.networking.packets import Packet
 
 
 class FacePlayerPacket(Packet):

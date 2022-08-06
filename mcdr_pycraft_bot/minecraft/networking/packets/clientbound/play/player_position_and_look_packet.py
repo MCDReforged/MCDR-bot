@@ -1,7 +1,7 @@
-from minecraft.networking.types.basic import Boolean
-from minecraft.networking.packets import Packet
+from mcdr_pycraft_bot.minecraft.networking.types.basic import Boolean
+from mcdr_pycraft_bot.minecraft.networking.packets import Packet
 
-from minecraft.networking.types import (
+from mcdr_pycraft_bot.minecraft.networking.types import (
     Double, Float, Byte, VarInt, BitFieldEnum, Vector, Direction,
     PositionAndLook, multi_attribute_alias,
 )

@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
-from minecraft import PRE
-from minecraft.networking.packets import Packet
+from mcdr_pycraft_bot.minecraft import PRE
+from mcdr_pycraft_bot.minecraft.networking.packets import Packet
 
-from minecraft.networking.types import (
+from mcdr_pycraft_bot.minecraft.networking.types import (
     VarInt, Integer, String, MutableRecord
 )
 
