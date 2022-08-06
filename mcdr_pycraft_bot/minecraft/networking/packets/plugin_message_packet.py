@@ -1,5 +1,5 @@
 from .packet import Packet
-from mcdr_pycraft_bot.minecraft.networking.types import String, TrailingByteArray
+from minecraft.networking.types import String, TrailingByteArray
 
 
 class AbstractPluginMessagePacket(Packet):

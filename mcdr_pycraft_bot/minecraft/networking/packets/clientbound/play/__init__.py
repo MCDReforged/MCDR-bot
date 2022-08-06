@@ -1,14 +1,18 @@
-from mcdr_pycraft_bot.minecraft.networking.packets import (
+from minecraft import PRE
+from minecraft.networking.packets import (
     Packet, AbstractKeepAlivePacket, AbstractPluginMessagePacket
 )
 
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.types import (
     FixedPoint, Integer, Angle, UnsignedByte, Byte, Boolean, UUID, Short,
     VarInt, Double, Float, String, Enum, Difficulty, Long, Vector, Direction,
     PositionAndLook, multi_attribute_alias, attribute_transform,
 )
 
-from .combat_event_packet import CombatEventPacket
+from .combat_event_packet import (
+    CombatEventPacket, EnterCombatEventPacket, EndCombatEventPacket,
+    DeathCombatEventPacket,
+)
 from .map_packet import MapPacket
 from .player_list_item_packet import PlayerListItemPacket
 from .player_position_and_look_packet import PlayerPositionAndLookPacket
@@ -36,7 +40,6 @@ def get_packets(context):
         EntityPositionDeltaPacket,
         TimeUpdatePacket,
         UpdateHealthPacket,
-        CombatEventPacket,
         ExplosionPacket,
         SpawnObjectPacket,
         BlockChangePacket,
@@ -47,18 +50,33 @@ def get_packets(context):
         EntityLookPacket,
         ResourcePackSendPacket
     }
+
     if context.protocol_earlier_eq(47):
         packets |= {
             SetCompressionPacket,
         }
+
+    if context.protocol_earlier(PRE | 15):
+        packets |= {
+            CombatEventPacket,
+        }
+    else:
+        packets |= {
+            EnterCombatEventPacket,
+            EndCombatEventPacket,
+            DeathCombatEventPacket,
+        }
+
     if context.protocol_later_eq(94):
         packets |= {
             SoundEffectPacket,
         }
+
     if context.protocol_later_eq(352):
         packets |= {
             FacePlayerPacket
         }
+
     return packets
 
 
@@ -264,7 +282,8 @@ class EntityPositionDeltaPacket(Packet):
 class TimeUpdatePacket(Packet):
     @staticmethod
     def get_id(context):
-        return 0x58 if context.protocol_later_eq(755) else \
+        return 0x59 if context.protocol_later_eq(PRE | 48) else \
+               0x58 if context.protocol_later_eq(755) else \
                0x4E if context.protocol_later_eq(721) else \
                0x4F if context.protocol_later_eq(550) else \
                0x4E if context.protocol_later_eq(471) else \
@@ -332,7 +351,8 @@ class PluginMessagePacket(AbstractPluginMessagePacket):
 class PlayerListHeaderAndFooterPacket(Packet):
     @staticmethod
     def get_id(context):
-        return 0x5E if context.protocol_later_eq(755) else \
+        return 0x5F if context.protocol_later_eq(PRE | 48) else \
+               0x5E if context.protocol_later_eq(755) else \
                0x53 if context.protocol_later_eq(721) else \
                0x54 if context.protocol_later_eq(550) else \
                0x53 if context.protocol_later_eq(471) else \
@@ -378,11 +398,31 @@ class EntityLookPacket(Packet):
 class ResourcePackSendPacket(Packet):
     @staticmethod
     def get_id(context):
-        return 0x3C if context.protocol_later_eq(755) else \
-               0x38
+        return 0x3C if context.protocol_later_eq(PRE | 15) else \
+               0x39 if context.protocol_later_eq(PRE | 8) else \
+               0x38 if context.protocol_later_eq(741) else \
+               0x39 if context.protocol_later_eq(721) else \
+               0x3A if context.protocol_later_eq(550) else \
+               0x39 if context.protocol_later_eq(471) else \
+               0x37 if context.protocol_later_eq(461) else \
+               0x38 if context.protocol_later_eq(451) else \
+               0x37 if context.protocol_later_eq(389) else \
+               0x36 if context.protocol_later_eq(352) else \
+               0x35 if context.protocol_later_eq(345) else \
+               0x34 if context.protocol_later_eq(336) else \
+               0x33 if context.protocol_later_eq(332) else \
+               0x34 if context.protocol_later_eq(318) else \
+               0x32 if context.protocol_later_eq(70) else \
+               0x48
 
     packet_name = "resource pack send"
-    definition = [
-        {"url": String},
-        {"hash": String}
-    ]
+
+    @staticmethod
+    def get_definition(context):
+        return [
+            {"url": String},
+            {"hash": String},
+            {"forced": Boolean} if context.protocol_later_eq(PRE | 5) else {},
+            {"forced_message": String}
+            if context.protocol_later_eq(PRE | 15) else {},
+        ]

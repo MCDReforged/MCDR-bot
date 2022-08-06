@@ -1,6 +1,6 @@
 from .packet import Packet
 
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.types import (
     VarInt, Long
 )
 

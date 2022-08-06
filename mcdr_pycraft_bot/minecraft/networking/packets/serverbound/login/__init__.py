@@ -1,6 +1,6 @@
-from mcdr_pycraft_bot.minecraft.networking.packets import Packet
+from minecraft.networking.packets import Packet
 
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.types import (
     VarInt, Boolean, String, VarIntPrefixedByteArray, TrailingByteArray
 )
 

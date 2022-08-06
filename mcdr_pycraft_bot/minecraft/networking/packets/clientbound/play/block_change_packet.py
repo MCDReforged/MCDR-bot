@@ -1,5 +1,5 @@
-from mcdr_pycraft_bot.minecraft.networking.packets import Packet
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.packets import Packet
+from minecraft.networking.types import (
     Type, VarInt, VarLong, UnsignedLong, Integer, UnsignedByte, Position,
     Vector, MutableRecord, PrefixedArray, Boolean, attribute_alias,
     multi_attribute_alias,

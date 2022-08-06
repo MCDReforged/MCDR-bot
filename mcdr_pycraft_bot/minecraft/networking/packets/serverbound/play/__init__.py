@@ -1,8 +1,8 @@
-from mcdr_pycraft_bot.minecraft.networking.packets import (
+from minecraft.networking.packets import (
     Packet, AbstractKeepAlivePacket, AbstractPluginMessagePacket
 )
 
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.types import (
     Double, Float, Boolean, VarInt, String, Byte, Position, Enum,
     RelativeHand, BlockFace, Vector, Direction, PositionAndLook,
     multi_attribute_alias,
@@ -199,7 +199,7 @@ class PlayerBlockPlacementPacket(Packet):
         packet.face = packet.Face.TOP   # See networking.types.BlockFace.
         packet.hand = packet.Hand.MAIN  # See networking.types.RelativeHand.
     Next values are called in-block coordinates.
-    They are calculated using raytracing. From 0 to 1 (from mcdr_pycraft_bot.minecraft 1.11)
+    They are calculated using raytracing. From 0 to 1 (from Minecraft 1.11)
     or integers from 0 to 15 or, in a special case, -1 (1.10.2 and earlier).
         packet.x = 0.725
         packet.y = 0.125
@@ -273,7 +273,7 @@ class ResourcePackStatusPacket(Packet):
     @staticmethod
     def get_id(context):
         return 0x21
-    packet_name = "resource pask status"
+    packet_name = "resource pack status"
     definition = [
         {"result": VarInt}
     ]

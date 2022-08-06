@@ -1,7 +1,7 @@
-from mcdr_pycraft_bot.minecraft.networking.packets import Packet
-from mcdr_pycraft_bot.minecraft.networking.types.utility import descriptor
+from minecraft.networking.packets import Packet
+from minecraft.networking.types.utility import descriptor
 
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.types import (
     VarInt, UUID, Byte, Double, Integer, Angle, Short, Enum, Vector,
     Direction, PositionAndLook, attribute_alias, multi_attribute_alias,
 )

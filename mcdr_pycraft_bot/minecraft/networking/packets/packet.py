@@ -1,7 +1,7 @@
 from zlib import compress
 
 from .packet_buffer import PacketBuffer
-from mcdr_pycraft_bot.minecraft.networking.types import (
+from minecraft.networking.types import (
     VarInt, Enum, overridable_property,
 )
 
