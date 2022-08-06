@@ -2,7 +2,7 @@ MCDR bot
 --------
 A [MCDReforged](https://github.com/Fallen-Breath/MCDReforged) plugin for adding bots into your server
 
-Bot (fake player) is based on [pyCraft](https://github.com/ammaraskar/pyCraft), supports up to 1.17 server
+Bot (fake player) is based on [pyCraft](https://github.com/ammaraskar/pyCraft), supports up to 1.18 server
 
 Bot will be automatically set to creative mode for its safety. Don't worry it wont affect the game. Also you can set the default gamemode in the plugin
 
